@@ -2,14 +2,4 @@ name: TPPBS
 author: Vestri
 description: tppbc
 version: 0.1
-api-version: 1.15
-main: tppbc.java.Tppbs
-permissions:
-  tppbc.admin:
-    description: admin
-    default: op
-commands:
-  test:
-    description: tp
-    usage: /test
-
+main: tppbs.java.Tppbs

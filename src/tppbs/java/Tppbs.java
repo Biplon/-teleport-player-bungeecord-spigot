@@ -14,12 +14,9 @@ import java.io.IOException;
 
 public class Tppbs extends JavaPlugin implements PluginMessageListener
 {
-    public static Tppbs instance;
-
     @Override
     public void onEnable()
     {
-        instance = this;
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "tppbc:main", this);
     }
 
@@ -35,28 +32,30 @@ public class Tppbs extends JavaPlugin implements PluginMessageListener
             DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(message));
             try
             {
-                String c = msgin.readUTF();
-                if (c.equals("tppbc:main"))
-                {
-                    String somedata = msgin.readUTF();
-                    String[] values = somedata.split(",");
-                    Player p = Bukkit.getPlayer(values[0]);
-                    World w = Bukkit.getWorld(values[4]);
-                    float x = Integer.parseInt(values[1]);
-                    float y =  Integer.parseInt(values[2]);
-                    float z =  Integer.parseInt(values[3]);
-                    Location loc = new Location(w, x, y, z);
-                    assert p != null;
-                    p.teleport(loc);
-                    Bukkit.getLogger().info(somedata);
-                }
+                    String subchannel = msgin.readUTF();
+                    if (subchannel.equals("tppbc:main"))
+                    {
+                        String somedata = msgin.readUTF();
+                        Bukkit.getScheduler().runTaskLater(this,()->tpplayer(somedata),20);
+                    }
+
             }
             catch (IOException e)
             {
                 e.printStackTrace();
             }
-
-
     }
 
+    private void tpplayer(String v)
+    {
+        String[] values = v.split(",");
+        Player p = Bukkit.getPlayer(values[0]);
+        World w = Bukkit.getWorld(values[4]);
+        float x = Integer.parseInt(values[1]);
+        float y =  Integer.parseInt(values[2]);
+        float z =  Integer.parseInt(values[3]);
+        Location loc = new Location(w, x, y, z);
+        assert p != null;
+        p.teleport(loc);
+    }
 }
